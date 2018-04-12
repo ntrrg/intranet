@@ -26,10 +26,6 @@ build() {
     dns )
       docker run --rm "ntweb-${TAG}" named-checkconf -z || return 1
       ;;
-
-    rproxy )
-      docker run --rm "ntweb-${TAG}" nginx -t || return 1
-      ;;
   esac
 
   echo
