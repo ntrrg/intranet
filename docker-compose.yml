@@ -45,7 +45,7 @@ services:
     depends_on:
       - web
     ports:
-      - "8022:22"
+      - "22:22"
     volumes:
       - /media/ntrrg/NtServer/Server/Services/Gogs:/data
     networks:
