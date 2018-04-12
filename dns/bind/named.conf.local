@@ -1,0 +1,14 @@
+zone "nt.web.ve" {
+  type master;
+  file "/etc/bind/zones/db.default";
+};
+
+zone "0.168.192.in-addr.arpa" {
+  type master;
+  file "/etc/bind/zones/db.default.inv";
+};
+
+zone "rpz" {
+  type master;
+  file "/etc/bind/zones/db.rpz";
+};

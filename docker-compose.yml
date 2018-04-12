@@ -1,0 +1,58 @@
+version: "3.6"
+services:
+  visualizer:
+    image: dockersamples/visualizer
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      platform:
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+  dns:
+    image: ntweb-dns
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    networks:
+      platform:
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+  web:
+    image: ntweb-web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /media/ntrrg/NtServer/Work/NtWeb/Repositories/ntrrg.github.io:/srv/web:ro
+      - /media/ntrrg/NtServer/Software/Linux/Mirrors:/srv/mirrors:ro
+    networks:
+      public:
+    deploy:
+      restart_policy:
+        condition: on-failure
+  git:
+    image: gogs/gogs
+    depends_on:
+      - web
+    ports:
+      - "8022:22"
+    volumes:
+      - /media/ntrrg/NtServer/Server/Services/Gogs:/data
+    networks:
+      public:
+    deploy:
+      restart_policy:
+        condition: on-failure
+networks:
+  platform:
+  public:
