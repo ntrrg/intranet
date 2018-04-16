@@ -1,13 +1,9 @@
-version: "3.6"
+version: "3"
 services:
-  visualizer:
+  status:
     image: dockersamples/visualizer
-    ports:
-      - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      platform:
     deploy:
       restart_policy:
         condition: on-failure
@@ -19,8 +15,6 @@ services:
     ports:
       - "53:53"
       - "53:53/udp"
-    networks:
-      platform:
     deploy:
       restart_policy:
         condition: on-failure
@@ -36,8 +30,6 @@ services:
       - /media/ntrrg/NtServer/Work/NtWeb/Certs:/etc/letsencrypt:ro
       - /media/ntrrg/NtServer/Work/NtWeb/Repositories/ntrrg.github.io:/srv/web:ro
       - /media/ntrrg/NtServer/Software/Linux/Mirrors:/srv/mirrors:ro
-    networks:
-      public:
     deploy:
       replicas: 1
       restart_policy:
@@ -50,11 +42,6 @@ services:
       - "22:22"
     volumes:
       - /media/ntrrg/NtServer/Server/Services/Gogs:/data
-    networks:
-      public:
     deploy:
       restart_policy:
         condition: on-failure
-networks:
-  platform:
-  public:

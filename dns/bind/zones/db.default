@@ -14,4 +14,5 @@ ns1     IN      A       192.168.0.50
 blog    IN      CNAME   @
 git     IN      CNAME   @
 mirrors IN      CNAME   @
+status  IN      CNAME   @
 www     IN      CNAME   @
