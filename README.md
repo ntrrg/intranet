@@ -30,7 +30,7 @@ httpredir.debian.org | mirrors.nt.web.ve.
 ### Reverse proxy
 
 VH | Protocol | Type | Target
----|------|-------
+---|----------|------|-------
 nt.web.ve | `http`, `h2` | Static | `/srv/web`
 git.nt.web.ve | `http`, `h2` | Reverse proxy | `git:3000`
 mirrors.web.ve | `http`, `h2` | Static | `/srv/mirrors`
