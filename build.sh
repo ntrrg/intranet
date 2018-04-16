@@ -28,6 +28,10 @@ build() {
       ;;
   esac
 
+  if docker service ls | grep -q "ntweb-intranet_${TAG}"; then
+    docker service update --force "ntweb-intranet_${TAG}" || return 1
+  fi
+
   echo
   echo "Done (${TAG})"
 }
