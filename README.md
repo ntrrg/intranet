@@ -75,7 +75,7 @@ services:
 1. Build/get all the required images
 
    ```sh
-.bin/prepare.sh
+   .bin/prepare.sh
    ```
 
 2. Get/generate the necessary secrets
@@ -83,27 +83,27 @@ services:
    **SSL/TLS:**
 
    ```sh
-docker run --rm -it -p 80:80 -p 443:443 \
- -v "${SERVER}/etc/letsencrypt":/etc/letsencrypt \
-   certbot/certbot certonly --standalone --expand \
-     -nm ntrrgx@gmail.com --agree-tos \
-     -d nt.web.ve \
-     -d blog.nt.web.ve \
-     -d ci.nt.web.ve \
-     -d docker.nt.web.ve \
-     -d git.nt.web.ve \
-     -d mirrors.nt.web.ve \
-     -d registry.nt.web.ve \
-     -d www.nt.web.ve
+   docker run --rm -it -p 80:80 -p 443:443 \
+     -v "${SERVER}/etc/letsencrypt":/etc/letsencrypt \
+       certbot/certbot certonly --standalone --expand \
+         -nm ntrrgx@gmail.com --agree-tos \
+         -d nt.web.ve \
+         -d blog.nt.web.ve \
+         -d ci.nt.web.ve \
+         -d docker.nt.web.ve \
+         -d git.nt.web.ve \
+         -d mirrors.nt.web.ve \
+         -d registry.nt.web.ve \
+         -d www.nt.web.ve
    ```
 
    **HTPASSWD:**
 
    ```sh
-docker run --rm \
- --entrypoint htpasswd \
-registry:2 -bnB USER PASSWD \
- > "${SERVER}/etc/htpasswd"
+   docker run --rm \
+     --entrypoint htpasswd \
+   registry:2 -bnB USER PASSWD \
+     > "${SERVER}/etc/htpasswd"
    ```
 
 3. Verify that all the volumes and secrets points to the right path
@@ -134,20 +134,20 @@ registry:2 -bnB USER PASSWD \
 4. Initialize the Swarm
 
    ```sh
-docker swarm init
+   docker swarm init
    ```
 
 5. Set the node labels
 
    ```sh
-.bin/labels.sh
+   .bin/labels.sh
    ```
 
 6. Deploy the stack
 
    ```sh
-SERVER="/media/ntrrg/NtServer/Server" \
-docker stack deploy -c docker-compose.yml ntweb-intranet
+   SERVER="/media/ntrrg/NtServer/Server" \
+   docker stack deploy -c docker-compose.yml ntweb-intranet
    ```
 
 ## Acknowledgment
