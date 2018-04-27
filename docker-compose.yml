@@ -47,7 +47,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.service-git == true
   registry:
     image: registry:2
     networks:
@@ -99,7 +99,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.role == manager
+          - node.labels.service-ci-server == true
   ci-builder:
     depends_on:
       - ci-server
