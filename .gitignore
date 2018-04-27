@@ -1,1 +1,4 @@
 *.sublime*
+*.swp
+Session.vim
+

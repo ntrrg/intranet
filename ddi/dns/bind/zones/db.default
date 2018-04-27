@@ -11,8 +11,11 @@ $TTL    3600
 @       IN      A       192.168.0.50
 ns1     IN      A       192.168.0.50
 
-blog    IN      CNAME   @
-git     IN      CNAME   @
-mirrors IN      CNAME   @
-status  IN      CNAME   @
-www     IN      CNAME   @
+blog     IN      CNAME   @
+ci       IN      CNAME   @
+docker   IN      CNAME   @
+git      IN      CNAME   @
+mirrors  IN      CNAME   @
+registry IN      CNAME   @
+status   IN      CNAME   @
+www      IN      CNAME   @

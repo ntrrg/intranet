@@ -1,24 +1,31 @@
-version: "3"
+version: "3.6"
 services:
-  status:
-    image: dockersamples/visualizer
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+  # DDI
+
+  dns:
+    image: ntweb/intranet:dns
+    ports:
+      - "53:53"
+      - "53:53/udp"
     networks:
-      - public
+      - ddi
     deploy:
       restart_policy:
         condition: on-failure
       placement:
         constraints:
           - node.role == manager
-  dns:
-    image: ntweb-dns
-    ports:
-      - "53:53"
-      - "53:53/udp"
+
+  # Web
+
+  status:
+    image: dockersamples/visualizer
     networks:
-      - platform
+      - web
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
     deploy:
       restart_policy:
         condition: on-failure
@@ -29,29 +36,129 @@ services:
     image: gogs/gogs
     ports:
       - "22:22"
-    volumes:
-      - /media/ntrrg/NtServer/Server/services/gogs:/data
     networks:
-      - public
+      - web
+    volumes:
+      - type: bind
+        source: ${SERVER}/srv/gogs
+        target: /data
     deploy:
       restart_policy:
         condition: on-failure
-  web:
+      placement:
+        constraints:
+          - node.role == manager
+  registry:
+    image: registry:2
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: ${SERVER}/srv/registry
+        target: /var/lib/registry
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.service-registry == true
+  docker-registry:
+    image: registry:2
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: ${SERVER}/srv/docker-registry
+        target: /var/lib/registry
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.service-docker-registry == true
+  ci-server:
     depends_on:
       - git
+    image: drone/drone
+    environment:
+      - DRONE_HOST=https://ci.nt.web.ve
+      - DRONE_ADMIN=ntrrg
+      - DRONE_GOGS=true
+      - DRONE_GOGS_URL=https://git.nt.web.ve
+      - DRONE_SECRET=drone-ntweb-2018-04-27
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: ${SERVER}/srv/drone
+        target: /var/lib/drone
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+  ci-builder:
+    depends_on:
+      - ci-server
+    image: drone/agent
+    command: agent
+    environment:
+      - DRONE_SERVER=ci-server:9000
+      - DRONE_SECRET=drone-ntweb-2018-04-27
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.service-ci-builder == true
+  web:
+    depends_on:
+      - ci-server
+      - docker-registry
+      - git
+      - registry
       - status
-    image: ntweb-web
+    image: ntweb/intranet:web
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - /media/ntrrg/NtServer/Work/NtWeb/Certs:/etc/letsencrypt:ro
-      - /media/ntrrg/NtServer/Work/NtWeb/Repositories/ntrrg.github.io:/srv/web:ro
-      - /media/ntrrg/NtServer/Software/Linux/Mirrors:/srv/mirrors:ro
     networks:
-      - public
+      - web
+    volumes:
+      - type: bind
+        source: ${SERVER}/srv/mirrors
+        target: /srv/mirrors
+        read_only: true
+    secrets:
+      - source: privkey.pem
+        mode: 0000
+      - source: fullchain.pem
+        mode: 0000
+      - htpasswd
     deploy:
-      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
 networks:
-  platform:
-  public:
+  ddi:
+  web:
+secrets:
+  privkey.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/privkey2.pem
+  fullchain.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/fullchain2.pem
+  htpasswd:
+    file: ${SERVER}/etc/htpasswd
+
