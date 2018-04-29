@@ -1,5 +1,0 @@
-image: docker
-build:
-  script:
-    - .bin/prepare.sh
-
