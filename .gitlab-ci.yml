@@ -1,5 +1,5 @@
 image: docker
 build:
   script:
-    - .bin/prepare
+    - .bin/prepare.sh
 
