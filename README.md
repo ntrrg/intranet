@@ -126,7 +126,7 @@ services:
 
     **Reverse proxy:**
 
-    * `${SERVER}/srv/mirrors`
+    * `${SERVER}/srv/storage/data/ntrrg/Software/Linux/Mirrors`
     * `${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/privkey2.pem`
     * `${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/fullchain2.pem`
     * `${SERVER}/etc/htpasswd`
