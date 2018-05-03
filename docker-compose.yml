@@ -156,9 +156,9 @@ networks:
   web:
 secrets:
   privkey.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/privkey2.pem
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/privkey1.pem
   fullchain.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/fullchain2.pem
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/fullchain1.pem
   htpasswd:
     file: ${SERVER}/etc/htpasswd
 
