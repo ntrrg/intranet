@@ -1,52 +1,53 @@
 ## Services
 
-* [DNS](#dns) ([Bind9][]) - [See in docker-compose.yml](docker-compose.yml#L5)
+* [DNS](#dns) ([Bind9][]) - [docker-compose.yml](docker-compose.yml#L5)
 
-* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [See in docker-compose.yml](docker-compose.yml#L124)
+* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L124)
 
-* Status ([Visualizer][]) - [See in docker-compose.yml](docker-compose.yml#L21)
+* Status ([Visualizer][]) - [docker-compose.yml](docker-compose.yml#L21)
 
-* Git ([Gogs][]) - [See in docker-compose.yml](docker-compose.yml#L35)
+* Git ([Gogs][]) - [docker-compose.yml](docker-compose.yml#L35)
 
-* Continuous integration ([Drone][]) - [See in docker-compose.yml](docker-compose.yml#L81)
+* Continuous integration ([Drone][]) - [docker-compose.yml](docker-compose.yml#L81)
 
-* Private registry ([Docker Registry][]) - [See in docker-compose.yml](docker-compose.yml#L51)
+* Private registry ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L51)
 
-* Docker registry cache proxy ([Docker Registry][]) - [See in docker-compose.yml](docker-compose.yml#L65)
+* Docker registry cache proxy ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L65)
 
 ### DNS
 
-Domain | IP
--------|---
-nt.web.ve | 192.168.0.50
-blog | 192.168.0.50
-ci | 192.168.0.50
-docker | 192.168.0.50
-git | 192.168.0.50
-mirrors | 192.168.0.50
-ns1 | 192.168.0.50
-registry | 192.168.0.50
-status | 192.168.0.50
-www | 192.168.0.50
+**Domain** | **IP**
+-----------|--------------
+nt.web.ve  | 192.168.0.50
+blog       | 192.168.0.50
+ci         | 192.168.0.50
+docker     | 192.168.0.50
+git        | 192.168.0.50
+mirrors    | 192.168.0.50
+ns1        | 192.168.0.50
+registry   | 192.168.0.50
+status     | 192.168.0.50
+storage    | 192.168.0.50
+www        | 192.168.0.50
 
-**Domain rewrites:**
+#### Domain rewrites
 
-From | To
------|---
+**From**               | **To**
+-----------------------|-------------------
 dl-cdn.alpinelinux.org | mirrors.nt.web.ve
-httpredir.debian.org | mirrors.nt.web.ve
+httpredir.debian.org   | mirrors.nt.web.ve
 
 ### Reverse proxy
 
-VH | Protocol | Type | Target
----|----------|------|-------
-nt.web.ve | `http`, `h2` | Static | `/srv/web`
-ci.nt.web.ve | `http`, `h2` | Reverse proxy | `ci-server:8000`
+**VS**           | **Protocol** | **Type**      | **Target**
+-----------------|--------------|---------------|------------------------
+nt.web.ve        | `http`, `h2` | Static        | `/srv/web`
+ci.nt.web.ve     | `http`, `h2` | Reverse proxy | `ci-server:8000`
 docker.nt.web.ve | `http`, `h2` | Reverse proxy | `docker-registry:5000`
-git.nt.web.ve | `http`, `h2` | Reverse proxy | `git:3000`
-mirrors.web.ve | `http`, `h2` | Static | `/srv/mirrors`
-registry.web.ve | `http`, `h2` | Reverse proxy | `registry:5000`
-status.web.ve | `http` | Reverse proxy | `status:8080`
+git.nt.web.ve    | `http`, `h2` | Reverse proxy | `git:3000`
+mirrors.web.ve   | `http`, `h2` | Static        | `/srv/mirrors`
+registry.web.ve  | `http`, `h2` | Reverse proxy | `registry:5000`
+status.web.ve    | `http`, `h2` | Reverse proxy | `status:8080`
 
 ### Continuous integration
 
@@ -55,12 +56,12 @@ The easiest way to manage the Drone service is using the official
 
 ```sh
 docker run \
-  -e DRONE_SERVER=https://ci.nt.web.ve
-  -e DRONE_TOKEN=TOKEN
-info
+  -e DRONE_SERVER=https://ci.nt.web.ve \
+  -e DRONE_TOKEN=TOKEN \
+drone/cli info
 ```
 
-**Note:** `TOKEN` can be obtained from the
+**Note:** `TOKEN` should be obtained from the
 [web interface](https://ci.nt.web.ve/account/token).
 
 Also there are some useful endpoints for getting information about the CI
@@ -72,78 +73,19 @@ services:
 
 ## Usage
 
-1. Build/get all the required images
-
-    ```sh
-    .bin/prepare.sh
-    ```
-
-2. Get/generate the necessary secrets
-
-    **SSL/TLS:**
-
-    ```sh
-    docker run --rm -it -p 80:80 -p 443:443 \
-      -v "${SERVER}/etc/letsencrypt":/etc/letsencrypt \
-        certbot/certbot certonly --standalone --expand \
-          -nm ntrrgx@gmail.com --agree-tos \
-          -d nt.web.ve \
-          -d blog.nt.web.ve \
-          -d ci.nt.web.ve \
-          -d docker.nt.web.ve \
-          -d git.nt.web.ve \
-          -d mirrors.nt.web.ve \
-          -d registry.nt.web.ve \
-          -d www.nt.web.ve
-    ```
-
-    **HTPASSWD:**
-
-    ```sh
-    docker run --rm \
-      --entrypoint htpasswd \
-    registry:2 -bnB USER PASSWD \
-      > "${SERVER}/etc/htpasswd"
-    ```
-
-3. Verify that all the volumes and secrets points to the right path
-
-    **Git:**
-
-    * `${SERVER}/srv/gogs`
-
-    **Continuous integration:**
-
-    * `${SERVER}/srv/drone`
-
-    **Registry:**
-
-    * `${SERVER}/srv/registry`
-
-    **Docker registry cache proxy:**
-
-    * `${SERVER}/srv/docker-registry`
-
-    **Reverse proxy:**
-
-    * `${SERVER}/srv/storage/data/ntrrg/Software/Linux/Mirrors`
-    * `${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/privkey2.pem`
-    * `${SERVER}/etc/letsencrypt/archive/nt.web.ve-0002/fullchain2.pem`
-    * `${SERVER}/etc/htpasswd`
-
-4. Initialize the Swarm
+1. Initialize the Swarm
 
     ```sh
     docker swarm init
     ```
 
-5. Set the node labels
+2. Prepare the node for the services
 
     ```sh
-    .bin/labels.sh
+    SERVER="/media/ntrrg/NtServer/Server" .bin/prepare.sh
     ```
 
-6. Deploy the stack
+3. Deploy the stack
 
     ```sh
     SERVER="/media/ntrrg/NtServer/Server" \
