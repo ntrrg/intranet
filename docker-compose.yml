@@ -136,7 +136,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: ${SERVER}/srv/storage/data/ntrrg/Software/Linux/Mirrors
+        source: ${SERVER}/srv/mirrors
         target: /srv/mirrors
         read_only: true
     secrets:
