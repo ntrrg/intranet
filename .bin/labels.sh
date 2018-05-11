@@ -28,6 +28,7 @@ case $1 in
       --label-add service-mirrors=true \
       --label-add service-registry=true \
       --label-add service-docker-registry=true \
+      --label-add service-site=true \
     "${NODE}"
     ;;
 esac 

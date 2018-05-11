@@ -121,13 +121,17 @@ services:
       placement:
         constraints:
           - node.labels.service-ci-builder == true
+  site:
+    image: ntrrg/site
+    networks:
+      - web
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.service-site == true
   web:
-    depends_on:
-      - ci-server
-      - docker-registry
-      - git
-      - registry
-      - status
     image: ntweb/intranet:web
     ports:
       - "80:80"

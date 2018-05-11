@@ -2,7 +2,7 @@
 
 * [DNS](#dns) ([Bind9][]) - [docker-compose.yml](docker-compose.yml#L5)
 
-* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L124)
+* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L134)
 
 * Status ([Visualizer][]) - [docker-compose.yml](docker-compose.yml#L21)
 
@@ -13,6 +13,8 @@
 * Private registry ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L51)
 
 * Docker registry cache proxy ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L65)
+
+* Site ([Hugo][]) - [docker-compose.yml](docker-compose.yml#L124)
 
 ### DNS
 
@@ -41,13 +43,15 @@ httpredir.debian.org   | mirrors.nt.web.ve
 
 **VS**           | **Protocol** | **Type**      | **Target**
 -----------------|--------------|---------------|------------------------
-nt.web.ve        | `http`, `h2` | Static        | `/srv/web`
+nt.web.ve        | `http`, `h2` | Reverse proxy | `site:80`
+blog.nt.web.ve   | `http`, `h2` | Reverse proxy | `site:80`
 ci.nt.web.ve     | `http`, `h2` | Reverse proxy | `ci-server:8000`
 docker.nt.web.ve | `http`, `h2` | Reverse proxy | `docker-registry:5000`
 git.nt.web.ve    | `http`, `h2` | Reverse proxy | `git:3000`
 mirrors.web.ve   | `http`, `h2` | Static        | `/srv/mirrors`
 registry.web.ve  | `http`, `h2` | Reverse proxy | `registry:5000`
 status.web.ve    | `http`, `h2` | Reverse proxy | `status:8080`
+www.nt.web.ve    | `http`, `h2` | Reverse proxy | `site:80`
 
 ### Continuous integration
 
@@ -124,10 +128,13 @@ Working on this project I use/used:
 
 * [Vim](https://www.vim.org/)
 
+* [Hugo][]
+
 [Bind9]: https://www.isc.org/downloads/bind/
 [Gogs]: https://gogs.io/
 [NGINX]: https://www.nginx.com/
 [Visualizer]: https://github.com/dockersamples/docker-swarm-visualizer
 [Docker Registry]: https://hub.docker.com/_/registry/
 [Drone]: https://drone.io/
+[Hugo]: https://gohugo.io
 
