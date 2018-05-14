@@ -18,24 +18,27 @@
 
 ### DNS
 
-**Domain** | **IP**
+**Domain** | **IP/Alias**
 -----------|--------------
 nt.web.ve  | 192.168.0.50
-blog       | 192.168.0.50
+blog       | nt.web.ve
 ci         | 192.168.0.50
 docker     | 192.168.0.50
 git        | 192.168.0.50
+home       | 192.168.0.50
 mirrors    | 192.168.0.50
 ns1        | 192.168.0.50
 registry   | 192.168.0.50
 status     | 192.168.0.50
 storage    | 192.168.0.50
-www        | 192.168.0.50
+test       | 192.168.0.50
+www        | nt.web.ve
 
 #### Domain rewrites
 
 **From**               | **To**
 -----------------------|-------------------
+deb.debian.org         | mirrors.nt.web.ve
 dl-cdn.alpinelinux.org | mirrors.nt.web.ve
 httpredir.debian.org   | mirrors.nt.web.ve
 
@@ -44,14 +47,12 @@ httpredir.debian.org   | mirrors.nt.web.ve
 **VS**           | **Protocol** | **Type**      | **Target**
 -----------------|--------------|---------------|------------------------
 nt.web.ve        | `http`, `h2` | Reverse proxy | `site:80`
-blog.nt.web.ve   | `http`, `h2` | Reverse proxy | `site:80`
 ci.nt.web.ve     | `http`, `h2` | Reverse proxy | `ci-server:8000`
 docker.nt.web.ve | `http`, `h2` | Reverse proxy | `docker-registry:5000`
 git.nt.web.ve    | `http`, `h2` | Reverse proxy | `git:3000`
 mirrors.web.ve   | `http`, `h2` | Static        | `/srv/mirrors`
 registry.web.ve  | `http`, `h2` | Reverse proxy | `registry:5000`
 status.web.ve    | `http`, `h2` | Reverse proxy | `status:8080`
-www.nt.web.ve    | `http`, `h2` | Reverse proxy | `site:80`
 
 ### Continuous integration
 
@@ -92,8 +93,7 @@ services:
 3. Deploy the stack
 
     ```sh
-    SERVER="/media/ntrrg/NtServer/Server" \
-    docker stack deploy -c docker-compose.yml ntweb-intranet
+    SERVER="/media/ntrrg/NtServer/Server" .bin/deploy.sh
     ```
 
 ## Acknowledgment
