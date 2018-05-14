@@ -49,7 +49,7 @@ certbot() {
 # Services
 
 _home() {
-  certbot ci docker git mirrors registry status storage
+  certbot home ci docker git mirrors registry status storage
 
   return $?
 }

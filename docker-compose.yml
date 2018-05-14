@@ -144,9 +144,17 @@ services:
         target: /srv/mirrors
         read_only: true
     secrets:
-      - source: privkey.pem
+      - source: site_privkey.pem
         mode: 0000
-      - source: fullchain.pem
+      - source: site_fullchain.pem
+        mode: 0000
+      - source: home_privkey.pem
+        mode: 0000
+      - source: home_fullchain.pem
+        mode: 0000
+      - source: test_privkey.pem
+        mode: 0000
+      - source: test_fullchain.pem
         mode: 0000
       - htpasswd
     deploy:
@@ -159,10 +167,18 @@ networks:
   ddi:
   web:
 secrets:
-  privkey.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/privkey1.pem
-  fullchain.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/fullchain1.pem
+  site_privkey.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0001/privkey1.pem
+  site_fullchain.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve-0001/fullchain1.pem
+  home_privkey.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/ci.nt.web.ve/privkey2.pem
+  home_fullchain.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/ci.nt.web.ve/fullchain2.pem
+  test_privkey.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/test.nt.web.ve/privkey1.pem
+  test_fullchain.pem:
+    file: ${SERVER}/etc/letsencrypt/archive/test.nt.web.ve/fullchain1.pem
   htpasswd:
     file: ${SERVER}/etc/htpasswd
 
