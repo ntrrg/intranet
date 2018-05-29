@@ -143,6 +143,10 @@ services:
         source: ${SERVER}/srv/mirrors
         target: /srv/mirrors
         read_only: true
+      - type: bind
+        source: ${SERVER}/srv/storage
+        target: /srv/storage
+        read_only: true
     secrets:
       - source: site_privkey.pem
         mode: 0000
