@@ -87,13 +87,13 @@ services:
 2. Prepare the node for the services
 
     ```sh
-    SERVER="/media/ntrrg/NtServer/Server" .bin/prepare.sh
+    SERVER="/media/ntrrg/NtServer" .bin/prepare.sh
     ```
 
 3. Deploy the stack
 
     ```sh
-    SERVER="/media/ntrrg/NtServer/Server" .bin/deploy.sh
+    SERVER="/media/ntrrg/NtServer" .bin/deploy.sh
     ```
 
 ## Acknowledgment
