@@ -95,6 +95,7 @@ services:
         source: ${SERVER}/srv/drone
         target: /var/lib/drone
     deploy:
+      endpoint_mode: dnsrr
       restart_policy:
         condition: on-failure
       placement:
