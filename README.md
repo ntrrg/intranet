@@ -2,7 +2,7 @@
 
 * [DNS](#dns) ([Bind9][]) - [docker-compose.yml](docker-compose.yml#L5)
 
-* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L134)
+* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L135)
 
 * Status ([Visualizer][]) - [docker-compose.yml](docker-compose.yml#L21)
 
@@ -14,7 +14,7 @@
 
 * Docker registry cache proxy ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L65)
 
-* Site ([Hugo][]) - [docker-compose.yml](docker-compose.yml#L124)
+* Site ([Hugo][]) - [docker-compose.yml](docker-compose.yml#L125)
 
 ### DNS
 
