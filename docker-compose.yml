@@ -141,7 +141,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: ${SERVER}/srv/mirrors
+        source: ${SERVER}/srv/storage/data/_/software/linux/mirrors
         target: /srv/mirrors
         read_only: true
       - type: bind
