@@ -80,21 +80,21 @@ services:
 
 1. Initialize the Swarm
 
-    ```sh
-    docker swarm init
-    ```
+```sh
+docker swarm init
+```
 
 2. Prepare the node for the services
 
-    ```sh
-    SERVER="/media/ntrrg/NtServer" .bin/prepare.sh
-    ```
+```sh
+SERVER="/media/ntrrg/NtServer" .bin/prepare.sh
+```
 
 3. Deploy the stack
 
-    ```sh
-    SERVER="/media/ntrrg/NtServer" .bin/deploy.sh
-    ```
+```sh
+SERVER="/media/ntrrg/NtServer" .bin/deploy.sh
+```
 
 ## Acknowledgment
 
