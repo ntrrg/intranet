@@ -75,7 +75,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/storage
+        source: $SERVER/srv/storage/data
         target: /usr/share/nginx/html
         read_only: true
     deploy:
