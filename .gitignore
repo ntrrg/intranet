@@ -1,4 +1,5 @@
 *.sublime*
 *.swp
 Session.vim
+.make/bin/shellcheck
 

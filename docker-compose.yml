@@ -3,7 +3,7 @@ services:
   # DDI
 
   dns:
-    image: ntweb/intranet:dns
+    image: intranet-dns
     ports:
       - "53:53"
       - "53:53/udp"
@@ -18,122 +18,8 @@ services:
 
   # Web
 
-  status:
-    image: dockersamples/visualizer
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.role == manager
-  git:
-    image: gogs/gogs
-    ports:
-      - "22:22"
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: ${SERVER}/srv/gogs
-        target: /data
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-git == true
-  registry:
-    image: registry:2
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: ${SERVER}/srv/registry
-        target: /var/lib/registry
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-registry == true
-  docker-registry:
-    image: registry:2
-    environment:
-      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: ${SERVER}/srv/docker-registry
-        target: /var/lib/registry
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-docker-registry == true
-  ci-server:
-    depends_on:
-      - git
-    image: drone/drone
-    environment:
-      - DRONE_HOST=https://ci.nt.web.ve
-      - DRONE_ADMIN=ntrrg
-      - DRONE_GOGS=true
-      - DRONE_GOGS_URL=https://git.nt.web.ve
-      - DRONE_SECRET=drone-ntweb-2018-04-27
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: ${SERVER}/srv/drone
-        target: /var/lib/drone
-    deploy:
-      endpoint_mode: dnsrr
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-ci-server == true
-  ci-builder:
-    depends_on:
-      - ci-server
-    image: drone/agent
-    command: agent
-    environment:
-      - DRONE_SERVER=ci-server:9000
-      - DRONE_SECRET=drone-ntweb-2018-04-27
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-ci-builder == true
-  site:
-    image: ntrrg/site
-    networks:
-      - web
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.labels.service-site == true
-  web:
-    image: ntweb/intranet:web
+  load-balancer:
+    image: intranet-load-balancer
     ports:
       - "80:80"
       - "443:443"
@@ -141,11 +27,11 @@ services:
       - web
     volumes:
       - type: bind
-        source: ${SERVER}/srv/storage/data/_/software/linux/mirrors
+        source: $SERVER/srv/mirrors
         target: /srv/mirrors
         read_only: true
       - type: bind
-        source: ${SERVER}/srv/storage
+        source: $SERVER/srv/storage
         target: /srv/storage
         read_only: true
     secrets:
@@ -168,22 +54,136 @@ services:
           - node.role == manager
       restart_policy:
         condition: on-failure
+  status:
+    image: dockersamples/visualizer
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+  site:
+    image: ntrrg/site
+    networks:
+      - web
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.site == true
+  git:
+    image: gogs/gogs
+    ports:
+      - "22:22"
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/gogs
+        target: /data
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.git == true
+  ci-server:
+    depends_on:
+      - git
+    image: drone/drone
+    environment:
+      - DRONE_HOST=https://ci.nt.web.ve
+      - DRONE_ADMIN=ntrrg
+      - DRONE_GOGS=true
+      - DRONE_GOGS_URL=https://git.nt.web.ve
+      - DRONE_SECRET=$DRONE_SECRET
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/drone
+        target: /var/lib/drone
+    deploy:
+      endpoint_mode: dnsrr
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.ci-server == true
+  ci-builder:
+    depends_on:
+      - ci-server
+    image: drone/agent
+    command: agent
+    environment:
+      - DRONE_SERVER=ci-server:9000
+      - DRONE_SECRET=$DRONE_SECRET
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.ci-builder == true
+  registry:
+    image: registry:2
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/registry
+        target: /var/lib/registry
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.registry == true
+  docker-registry:
+    image: registry:2
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/docker-registry
+        target: /var/lib/registry
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.docker-registry == true
 networks:
   ddi:
   web:
 secrets:
   site_privkey.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/privkey1.pem
+    file: $SERVER/etc/letsencrypt/archive/nt.web.ve/privkey1.pem
   site_fullchain.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/nt.web.ve/fullchain1.pem
+    file: $SERVER/etc/letsencrypt/archive/nt.web.ve/fullchain1.pem
   home_privkey.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/home.nt.web.ve/privkey1.pem
+    file: $SERVER/etc/letsencrypt/archive/home.nt.web.ve/privkey1.pem
   home_fullchain.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/home.nt.web.ve/fullchain1.pem
+    file: $SERVER/etc/letsencrypt/archive/home.nt.web.ve/fullchain1.pem
   test_privkey.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/test.nt.web.ve/privkey1.pem
+    file: $SERVER/etc/letsencrypt/archive/test.nt.web.ve/privkey1.pem
   test_fullchain.pem:
-    file: ${SERVER}/etc/letsencrypt/archive/test.nt.web.ve/fullchain1.pem
+    file: $SERVER/etc/letsencrypt/archive/test.nt.web.ve/fullchain1.pem
   htpasswd:
-    file: ${SERVER}/etc/htpasswd
+    file: $SERVER/etc/htpasswd
 

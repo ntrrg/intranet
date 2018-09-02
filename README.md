@@ -1,48 +1,48 @@
 ## Services
 
-* [DNS](#dns) ([Bind9][]) - [docker-compose.yml](docker-compose.yml#L5)
+* [DNS](#dns) ([Bind9][])
 
-* [Reverse proxy](#reverse-proxy) ([NGINX][]) - [docker-compose.yml](docker-compose.yml#L135)
-
-* Status ([Visualizer][]) - [docker-compose.yml](docker-compose.yml#L21)
-
-* Git ([Gogs][]) - [docker-compose.yml](docker-compose.yml#L35)
-
-* Continuous integration ([Drone][]) - [docker-compose.yml](docker-compose.yml#L81)
-
-* Private registry ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L51)
-
-* Docker registry cache proxy ([Docker Registry][]) - [docker-compose.yml](docker-compose.yml#L65)
-
-* Site ([Hugo][]) - [docker-compose.yml](docker-compose.yml#L125)
+* [Load balancer](#load-balancer) ([NGINX][])
+* Status ([Visualizer][])
+* Site ([Hugo][])
+* Git ([Gogs][])
+* Continuous integration ([Drone][])
+* Private registry ([Docker Registry][])
+* Docker registry cache proxy ([Docker Registry][])
 
 ### DNS
+
+---
+
+**Constraints:** `node.role == manager`
+**Mode:** `replicated`
+**Ports:** `53/tcp`, `53/upd`
+
+---
 
 **Domain** | **IP/Alias**
 -----------|--------------
 nt.web.ve  | 192.168.0.50
 blog       | nt.web.ve
-ci         | 192.168.0.50
-docker     | 192.168.0.50
-git        | 192.168.0.50
-home       | 192.168.0.50
-mirrors    | 192.168.0.50
-ns1        | 192.168.0.50
-registry   | 192.168.0.50
-status     | 192.168.0.50
-storage    | 192.168.0.50
-test       | 192.168.0.50
+ci         | nt.web.ve
+docker     | nt.web.ve
+git        | nt.web.ve
+home       | nt.web.ve
+mirrors    | nt.web.ve
+ns1        | nt.web.ve
+registry   | nt.web.ve
+status     | nt.web.ve
+storage    | nt.web.ve
+test       | nt.web.ve
 www        | nt.web.ve
 
-#### Domain rewrites
+#### Rewrites
 
-**From**               | **To**
------------------------|-------------------
-deb.debian.org         | mirrors.nt.web.ve
-dl-cdn.alpinelinux.org | mirrors.nt.web.ve
-httpredir.debian.org   | mirrors.nt.web.ve
+* `deb.debian.org` -> `mirrors.nt.web.ve`
+* `dl-cdn.alpinelinux.org` -> `mirrors.nt.web.ve`
+* `httpredir.debian.org` -> `mirrors.nt.web.ve`
 
-### Reverse proxy
+### Load balancer
 
 **VS**           | **Protocol** | **Type**      | **Target**
 -----------------|--------------|---------------|------------------------
@@ -50,9 +50,10 @@ nt.web.ve        | `http`, `h2` | Reverse proxy | `site:80`
 ci.nt.web.ve     | `http`, `h2` | Reverse proxy | `ci-server:8000`
 docker.nt.web.ve | `http`, `h2` | Reverse proxy | `docker-registry:5000`
 git.nt.web.ve    | `http`, `h2` | Reverse proxy | `git:3000`
-mirrors.web.ve   | `http`, `h2` | Static        | `/srv/mirrors`
+mirrors.web.ve   | `http`, `h2` | Static files  | `/srv/mirrors`
 registry.web.ve  | `http`, `h2` | Reverse proxy | `registry:5000`
 status.web.ve    | `http`, `h2` | Reverse proxy | `status:8080`
+storage.web.ve   | `http`, `h2` | Static files  | `/srv/storage`
 
 ### Continuous integration
 
@@ -78,22 +79,31 @@ services:
 
 ## Usage
 
-1. Initialize the Swarm
+**Requirements:**
 
-```sh
-docker swarm init
+* GNU Make
+
+1\. Initialize the Swarm.
+
+```shell-session
+# docker swarm init
 ```
 
-2. Prepare the node for the services
+2\. Generate the secrets.
 
-```sh
-SERVER="/media/ntrrg/NtServer" .bin/prepare.sh
+```shell-session
+# HTPASSWD="PASSWORD" make secrets
 ```
 
-3. Deploy the stack
+3\. Deploy the services.
 
-```sh
-SERVER="/media/ntrrg/NtServer" .bin/deploy.sh
+```shell-session
+# # Run services in multiples nodes (see Services section)
+# DRONE_SECRET="SECRET" make
+#
+# # Run services in one node
+# make build
+# DRONE_SECRET="SECRET" make deploy-single
 ```
 
 ## Acknowledgment
@@ -129,6 +139,8 @@ Working on this project I use/used:
 * [Vim](https://www.vim.org/)
 
 * [Hugo][]
+
+* [GNU make](https://www.gnu.org/software/make/)
 
 [Bind9]: https://www.isc.org/downloads/bind/
 [Gogs]: https://gogs.io/

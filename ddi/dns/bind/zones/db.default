@@ -1,27 +1,26 @@
 $TTL    3600
 @       IN      SOA     nt.web.ve. admin.nt.web.ve. (
-                   2018051301           ; Serial
+                   2018090201           ; Serial
                          3600           ; Refresh [1h]
                           600           ; Retry   [10m]
                         86400           ; Expire  [1d]
                           600 )         ; Negative Cache TTL [1h]
 
 @       IN      NS      ns1
-
-@       IN      A       192.168.0.50
 ns1     IN      A       192.168.0.50
 
-blog     IN      CNAME   @
-www      IN      CNAME   @
+@        IN     A       192.168.0.50
+blog     IN     CNAME   @
+www      IN     CNAME   @
 
-home     IN      CNAME   @
-test     IN      CNAME   @
+home     IN     CNAME   @
+ci       IN     CNAME   home
+docker   IN     CNAME   home
+git      IN     CNAME   home
+mirrors  IN     CNAME   home
+registry IN     CNAME   home
+status   IN     CNAME   home
+storage  IN     CNAME   home
 
-ci       IN      CNAME   @
-docker   IN      CNAME   @
-git      IN      CNAME   @
-mirrors  IN      CNAME   @
-registry IN      CNAME   @
-status   IN      CNAME   @
-storage  IN      CNAME   @
+test     IN     CNAME   home
 

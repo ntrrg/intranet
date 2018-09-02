@@ -1,0 +1,7 @@
+os: linux
+dist: trusty
+sudo: false
+git:
+  depth: 1
+language: bash
+script: make ci
