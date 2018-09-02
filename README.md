@@ -1,22 +1,22 @@
 ## Services
 
 * [DNS](#dns) ([Bind9][])
-
-* [Load balancer](#load-balancer) ([NGINX][])
-* Status ([Visualizer][])
-* Site ([Hugo][])
-* Git ([Gogs][])
-* Continuous integration ([Drone][])
-* Private registry ([Docker Registry][])
-* Docker registry cache proxy ([Docker Registry][])
+* [Reverse proxy](#reverse-proxy) ([NGINX][])
+* [Status](#status) ([Visualizer][])
+* [Site](#site) ([NGINX][])
+* [Storage](#storage) ([NGINX][])
+* [Mirrors](#mirrors) ([NGINX][])
+* [Git](#git) ([Gogs][])
+* [CI](#continuos-integration) ([Drone][])
+* [Containers Registry](#containers-registry) ([Docker Registry][])
 
 ### DNS
 
 ---
 
 **Constraints:** `node.role == manager`
-**Mode:** `replicated`
-**Ports:** `53/tcp`, `53/upd`
+
+**Published ports:** `53/tcp`, `53/upd`
 
 ---
 
@@ -42,20 +42,50 @@ www        | nt.web.ve
 * `dl-cdn.alpinelinux.org` -> `mirrors.nt.web.ve`
 * `httpredir.debian.org` -> `mirrors.nt.web.ve`
 
-### Load balancer
+### Reverse proxy
 
-**VS**           | **Protocol** | **Type**      | **Target**
------------------|--------------|---------------|------------------------
-nt.web.ve        | `http`, `h2` | Reverse proxy | `site:80`
-ci.nt.web.ve     | `http`, `h2` | Reverse proxy | `ci-server:8000`
-docker.nt.web.ve | `http`, `h2` | Reverse proxy | `docker-registry:5000`
-git.nt.web.ve    | `http`, `h2` | Reverse proxy | `git:3000`
-mirrors.web.ve   | `http`, `h2` | Static files  | `/srv/mirrors`
-registry.web.ve  | `http`, `h2` | Reverse proxy | `registry:5000`
-status.web.ve    | `http`, `h2` | Reverse proxy | `status:8080`
-storage.web.ve   | `http`, `h2` | Static files  | `/srv/storage`
+---
 
-### Continuous integration
+**Constraints:** `node.role == manager`
+
+**Published ports:** `80/tcp`, `443/tcp`
+
+---
+
+**Domain**       | **Protocol** | **Target**
+-----------------|--------------|------------------------
+nt.web.ve        | `h2`         | `site:80`
+blog.nt.web.ve   | `h2`         | `site:80`
+ci.nt.web.ve     | `h2`         | `ci-server:8000`
+docker.nt.web.ve | `h2`         | `docker-registry:5000`
+git.nt.web.ve    | `h2`         | `git:3000`
+mirrors.web.ve   | `http`, `h2` | `/srv/mirrors`
+registry.web.ve  | `h2`         | `registry:5000`
+status.web.ve    | `h2`         | `status:8080`
+storage.web.ve   | `http`, `h2` | `/srv/storage`
+www.nt.web.ve    | `h2`         | `site:80`
+
+### Status
+
+---
+
+**Constraints:** `node.role == manager`
+
+**Private ports:** `8080/tcp`
+
+---
+
+### Site
+
+---
+
+**Constraints:** `node.labels.site == true`
+
+**Private ports:** `80/tcp`
+
+---
+
+### Continuous Integration
 
 The easiest way to manage the Drone service is using the official
 [CLI](http://docs.drone.io/cli-installation/).
@@ -138,8 +168,6 @@ Working on this project I use/used:
 
 * [Vim](https://www.vim.org/)
 
-* [Hugo][]
-
 * [GNU make](https://www.gnu.org/software/make/)
 
 [Bind9]: https://www.isc.org/downloads/bind/
@@ -148,5 +176,4 @@ Working on this project I use/used:
 [Visualizer]: https://github.com/dockersamples/docker-swarm-visualizer
 [Docker Registry]: https://hub.docker.com/_/registry/
 [Drone]: https://drone.io/
-[Hugo]: https://gohugo.io
 

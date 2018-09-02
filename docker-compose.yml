@@ -18,22 +18,13 @@ services:
 
   # Web
 
-  load-balancer:
-    image: intranet-load-balancer
+  reverse-proxy:
+    image: intranet-reverse-proxy
     ports:
       - "80:80"
       - "443:443"
     networks:
       - web
-    volumes:
-      - type: bind
-        source: $SERVER/srv/mirrors
-        target: /srv/mirrors
-        read_only: true
-      - type: bind
-        source: $SERVER/srv/storage
-        target: /srv/storage
-        read_only: true
     secrets:
       - source: site_privkey.pem
         mode: 0000
@@ -78,6 +69,51 @@ services:
       placement:
         constraints:
           - node.labels.site == true
+  storage:
+    image: ntrrg/nginx:http
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/storage
+        target: /usr/share/nginx/html
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.storage == true
+  filebrowser:
+    image: filebrowser/filebrowser
+    command: -b /admin -d /srv/filebrowser.db -s /srv/data
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/storage
+        target: /srv
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.storage == true
+  mirrors:
+    image: ntrrg/nginx:http
+    networks:
+      - web
+    volumes:
+      - type: bind
+        source: $SERVER/srv/mirrors
+        target: /usr/share/nginx/html
+        read_only: true
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.mirrors == true
   git:
     image: gogs/gogs
     ports:

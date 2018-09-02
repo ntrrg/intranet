@@ -21,6 +21,7 @@ deploy-single:
 	docker pull drone/agent
 	docker pull drone/cli
 	docker pull drone/drone
+	docker pull filebrowser/filebrowser
 	docker pull gogs/gogs
 	docker pull ntrrg/site
 	docker pull registry:2
@@ -39,6 +40,7 @@ deploy-single:
 		--label-add mirrors=true \
 		--label-add registry=true \
 		--label-add site=true \
+		--label-add storage=true \
 		"$$(hostname)"
 	@$(MAKE) -s deploy
 

@@ -2,6 +2,7 @@
 
 SUBDOMAINS=""
 
+# shellcheck disable=SC2068
 for SUBDOMAIN in $@; do
   if [ "$SUBDOMAIN" = "@" ]; then
     SUBDOMAIN=""
@@ -17,5 +18,5 @@ docker run --rm -it \
   -v "$ROOT":/etc/letsencrypt \
   certbot/certbot certonly --standalone --expand \
     -nm "$EMAIL" --agree-tos \
-    $SUBDOMAINS
+    "$SUBDOMAINS"
 
