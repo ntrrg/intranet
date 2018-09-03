@@ -85,7 +85,7 @@ services:
         constraints:
           - node.labels.storage == true
   filebrowser:
-    image: filebrowser/filebrowser
+    image: filebrowser/filebrowser:v1.10.0
     command: -b /admin -d /srv/filebrowser.db -s /srv/data
     networks:
       - web
