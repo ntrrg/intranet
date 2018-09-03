@@ -8,17 +8,13 @@
 * [Mirrors](#mirrors) ([NGINX][])
 * [Git](#git) ([Gogs][])
 * [CI](#continuos-integration) ([Drone][])
-* [Containers Registry](#containers-registry) ([Docker Registry][])
+* [Container Registry](#container-registry) ([Docker Registry][])
 
 ### DNS
 
----
-
 **Constraints:** `node.role == manager`
 
-**Published ports:** `53/tcp`, `53/upd`
-
----
+**Ports:** `53/tcp`, `53/upd`
 
 **Domain** | **IP/Alias**
 -----------|--------------
@@ -44,16 +40,12 @@ www        | nt.web.ve
 
 ### Reverse proxy
 
----
-
 **Constraints:** `node.role == manager`
 
-**Published ports:** `80/tcp`, `443/tcp`
+**Ports:** `80/tcp`, `443/tcp`
 
----
-
-**Domain**       | **Protocol** | **Target**
------------------|--------------|------------------------
+**Name**         | **Protocol** | **Target**
+-----------------|--------------|-------------------------------
 nt.web.ve        | `h2`         | `site:80`
 blog.nt.web.ve   | `h2`         | `site:80`
 ci.nt.web.ve     | `h2`         | `ci-server:8000`
@@ -62,28 +54,28 @@ git.nt.web.ve    | `h2`         | `git:3000`
 mirrors.web.ve   | `http`, `h2` | `mirrors:80`
 registry.web.ve  | `h2`         | `registry:5000`
 status.web.ve    | `h2`         | `status:8080`
-storage.web.ve   | `http`, `h2` | `storage:80`
+storage.web.ve   | `http`, `h2` | `storage:80`, `filebrowser:80`
 www.nt.web.ve    | `h2`         | `site:80`
 
 ### Status
 
----
-
 **Constraints:** `node.role == manager`
-
-**Private ports:** `8080/tcp`
-
----
 
 ### Site
 
----
-
 **Constraints:** `node.labels.site == true`
 
-**Private ports:** `80/tcp`
+### Storage
 
----
+**Constraints:** `node.labels.storage == true`
+
+### Mirrors
+
+**Constraints:** `node.labels.mirrors == true`
+
+### Git
+
+**Constraints:** `node.labels.git == true`
 
 ### Continuous Integration
 
@@ -103,9 +95,19 @@ drone/cli info
 Also there are some useful endpoints for getting information about the CI
 services:
 
-* https://ci.nt.web.ve/metrics
-* https://ci.nt.web.ve/api/info/queue
-* https://ci.nt.web.ve/api/builds
+* <https://ci.nt.web.ve/metrics>
+* <https://ci.nt.web.ve/api/info/queue>
+* <https://ci.nt.web.ve/api/builds>
+
+### Container Registry
+
+#### Private Registry
+
+**Constraints:** `node.labels.registry == true`
+
+#### Docker Registry Cache
+
+**Constraints:** `node.labels.docker-registry == true`
 
 ## Usage
 
