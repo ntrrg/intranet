@@ -4,7 +4,7 @@
 * [Reverse proxy](#reverse-proxy) ([NGINX][])
 * [Status](#status) ([Visualizer][])
 * [Site](#site) ([NGINX][])
-* [Storage](#storage) ([NGINX][])
+* [Storage](#storage) ([NGINX][], [File Browser][])
 * [Mirrors](#mirrors) ([NGINX][])
 * [Git](#git) ([Gogs][])
 * [CI](#continuos-integration) ([Drone][])
@@ -59,10 +59,10 @@ blog.nt.web.ve   | `h2`         | `site:80`
 ci.nt.web.ve     | `h2`         | `ci-server:8000`
 docker.nt.web.ve | `h2`         | `docker-registry:5000`
 git.nt.web.ve    | `h2`         | `git:3000`
-mirrors.web.ve   | `http`, `h2` | `/srv/mirrors`
+mirrors.web.ve   | `http`, `h2` | `mirrors:80`
 registry.web.ve  | `h2`         | `registry:5000`
 status.web.ve    | `h2`         | `status:8080`
-storage.web.ve   | `http`, `h2` | `/srv/storage`
+storage.web.ve   | `http`, `h2` | `storage:80`
 www.nt.web.ve    | `h2`         | `site:80`
 
 ### Status
@@ -170,10 +170,13 @@ Working on this project I use/used:
 
 * [GNU make](https://www.gnu.org/software/make/)
 
+* [File Browser][]
+
 [Bind9]: https://www.isc.org/downloads/bind/
 [Gogs]: https://gogs.io/
 [NGINX]: https://www.nginx.com/
 [Visualizer]: https://github.com/dockersamples/docker-swarm-visualizer
 [Docker Registry]: https://hub.docker.com/_/registry/
 [Drone]: https://drone.io/
+[File Browser]: https://filebrowser.github.io/
 
