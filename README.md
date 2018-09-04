@@ -82,11 +82,11 @@ www.nt.web.ve    | `h2`         | `site:80`
 The easiest way to manage the Drone service is using the official
 [CLI](http://docs.drone.io/cli-installation/).
 
-```sh
-docker run \
+```shell-session
+# docker run \
   -e DRONE_SERVER=https://ci.nt.web.ve \
   -e DRONE_TOKEN=TOKEN \
-drone/cli info
+  drone/cli info
 ```
 
 **Note:** `TOKEN` should be obtained from the
