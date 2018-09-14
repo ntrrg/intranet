@@ -86,7 +86,7 @@ The easiest way to manage the Drone service is using the official
 # docker run \
   -e DRONE_SERVER=https://ci.nt.web.ve \
   -e DRONE_TOKEN=TOKEN \
-  drone/cli info
+  drone/cli:0.8.6 info
 ```
 
 **Note:** `TOKEN` should be obtained from the

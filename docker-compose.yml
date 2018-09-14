@@ -115,7 +115,7 @@ services:
         constraints:
           - node.labels.mirrors == true
   git:
-    image: gogs/gogs
+    image: gogs/gogs:0.11.53
     ports:
       - "22:22"
     networks:
@@ -133,7 +133,7 @@ services:
   ci-server:
     depends_on:
       - git
-    image: drone/drone
+    image: drone/drone:0.8.6
     environment:
       - DRONE_HOST=https://ci.nt.web.ve
       - DRONE_ADMIN=ntrrg
@@ -156,7 +156,7 @@ services:
   ci-builder:
     depends_on:
       - ci-server
-    image: drone/agent
+    image: drone/agent:0.8.6
     command: agent
     environment:
       - DRONE_SERVER=ci-server:9000

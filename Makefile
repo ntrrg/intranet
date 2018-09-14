@@ -18,11 +18,11 @@ deploy:
 
 .PHONY: deploy-single
 deploy-single:
-	docker pull drone/agent
-	docker pull drone/cli
-	docker pull drone/drone
-	docker pull filebrowser/filebrowser
-	docker pull gogs/gogs
+	docker pull drone/agent:0.8.6
+	docker pull drone/cli:0.8.6
+	docker pull drone/drone:0.8.6
+	docker pull filebrowser/filebrowser:v1.10.0
+	docker pull gogs/gogs:0.11.53
 	docker pull ntrrg/site
 	docker pull registry:2
 	mkdir -p \
