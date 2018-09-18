@@ -87,6 +87,7 @@ services:
   filebrowser:
     image: filebrowser/filebrowser:v1.10.0
     command: -b /admin -d /srv/filebrowser.db -s /srv/data
+    user: 1000
     networks:
       - web
     volumes:
