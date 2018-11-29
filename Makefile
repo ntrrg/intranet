@@ -1,9 +1,9 @@
-server := /media/ntrrg/NtServer
+server := /media/HP-dm4
 domain := nt.web.ve
 admin_email := ntrrgx@gmail.com
 
 .PHONY: all
-all: build deploy
+all: build
 
 .PHONY: build
 build:

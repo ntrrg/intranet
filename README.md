@@ -130,11 +130,12 @@ services:
 3\. Deploy the services.
 
 ```shell-session
+# make
+#
 # # Run services in multiples nodes (see Services section)
-# DRONE_SECRET="SECRET" make
+# DRONE_SECRET="SECRET" make deploy
 #
 # # Run services in one node
-# make build
 # DRONE_SECRET="SECRET" make deploy-single
 ```
 
