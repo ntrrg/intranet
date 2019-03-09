@@ -1,5 +1,6 @@
 *.sublime*
 *.swp
-Session.vim
+*.vim
+.screenrc
 .make/bin/shellcheck
 
