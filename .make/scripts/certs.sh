@@ -18,5 +18,5 @@ docker run --rm -it \
   -v "$ROOT":/etc/letsencrypt \
   certbot/certbot certonly --standalone --expand \
     -nm "$EMAIL" --agree-tos \
-    "$SUBDOMAINS"
+    $SUBDOMAINS
 
