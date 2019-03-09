@@ -82,10 +82,3 @@ deps-dev: .make/bin/shellcheck
 lint: .make/bin/shellcheck
 	$< -s sh $$(find .make/scripts/ -name "*.sh" -exec echo {} +)
 
-.PHONY: lint-md
-lint-md:
-	@docker run --rm -it -v "$$PWD":/files/ ntrrg/md-linter
-
-.make/bin/shellcheck: .make/scripts/install-shellcheck.sh
-	@RELEASE=$(shellcheck_release) DEST=$@ $<
-
