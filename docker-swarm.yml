@@ -1,4 +1,4 @@
-version: "3.6"
+version: "3.7"
 services:
   # DDI
 
@@ -45,20 +45,6 @@ services:
           - node.role == manager
       restart_policy:
         condition: on-failure
-  status:
-    image: dockersamples/visualizer
-    networks:
-      - web
-    volumes:
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - node.role == manager
   site:
     image: ntrrg/site
     networks:
@@ -75,7 +61,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/storage/data
+        source: {{ ROOT }}/srv/storage/data
         target: /usr/share/nginx/html
         read_only: true
     deploy:
@@ -92,7 +78,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/storage
+        source: {{ ROOT }}/srv/storage
         target: /srv
     deploy:
       restart_policy:
@@ -106,7 +92,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/mirrors
+        source: {{ ROOT }}/srv/mirrors
         target: /usr/share/nginx/html
         read_only: true
     deploy:
@@ -123,7 +109,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/gogs
+        source: {{ ROOT }}/srv/gogs
         target: /data
     deploy:
       restart_policy:
@@ -136,16 +122,16 @@ services:
       - git
     image: drone/drone:0.8.6
     environment:
-      - DRONE_HOST=https://ci.nt.web.ve
-      - DRONE_ADMIN=ntrrg
+      - DRONE_HOST=https://ci.{{ DOMAIN }}
+      - DRONE_ADMIN={{ USER }}
       - DRONE_GOGS=true
-      - DRONE_GOGS_URL=https://git.nt.web.ve
-      - DRONE_SECRET=$DRONE_SECRET
+      - DRONE_GOGS_URL=https://git.{{ DOMAIN }}
+      - DRONE_SECRET={{ DRONE_SECRET }}
     networks:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/drone
+        source: {{ ROOT }}/srv/drone
         target: /var/lib/drone
     deploy:
       endpoint_mode: dnsrr
@@ -160,8 +146,8 @@ services:
     image: drone/agent:0.8.6
     command: agent
     environment:
-      - DRONE_SERVER=ci-server:9000
-      - DRONE_SECRET=$DRONE_SECRET
+      - DRONE_ROOT=ci-server:9000
+      - DRONE_SECRET={{ DRONE_SECRET }}
     networks:
       - web
     volumes:
@@ -181,7 +167,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/registry
+        source: {{ ROOT }}/srv/registry
         target: /var/lib/registry
     deploy:
       restart_policy:
@@ -197,7 +183,7 @@ services:
       - web
     volumes:
       - type: bind
-        source: $SERVER/srv/docker-registry
+        source: {{ ROOT }}/srv/docker-registry
         target: /var/lib/registry
     deploy:
       restart_policy:
@@ -210,17 +196,17 @@ networks:
   web:
 secrets:
   site_privkey.pem:
-    file: $SERVER/etc/letsencrypt/archive/nt.web.ve/privkey1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/{{ DOMAIN }}/privkey1.pem
   site_fullchain.pem:
-    file: $SERVER/etc/letsencrypt/archive/nt.web.ve/fullchain1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/{{ DOMAIN }}/fullchain1.pem
   home_privkey.pem:
-    file: $SERVER/etc/letsencrypt/archive/home.nt.web.ve/privkey1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/home.{{ DOMAIN }}/privkey1.pem
   home_fullchain.pem:
-    file: $SERVER/etc/letsencrypt/archive/home.nt.web.ve/fullchain1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/home.{{ DOMAIN }}/fullchain1.pem
   test_privkey.pem:
-    file: $SERVER/etc/letsencrypt/archive/test.nt.web.ve/privkey1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/test.{{ DOMAIN }}/privkey1.pem
   test_fullchain.pem:
-    file: $SERVER/etc/letsencrypt/archive/test.nt.web.ve/fullchain1.pem
+    file: {{ ROOT }}/etc/letsencrypt/archive/test.{{ DOMAIN }}/fullchain1.pem
   htpasswd:
-    file: $SERVER/etc/htpasswd
+    file: {{ ROOT }}/etc/htpasswd
 

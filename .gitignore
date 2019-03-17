@@ -2,5 +2,5 @@
 *.swp
 *.vim
 .screenrc
-.make/bin/shellcheck
+/config.env
 

@@ -2,6 +2,11 @@
 
 set -e
 
+# shellcheck disable=SC1091
+. ./config.env
+
+cd "$IN_ROOT/var/server"
+
 main() {
   if [ -n "$1" ]; then
     build "$1"

@@ -1,8 +1,90 @@
+**intranet** is a tool that lets you deploy common enterprise services in 4
+steps.
+
+## Usage
+
+**Requirements:**
+
+* GNU Make
+* Docker >= 18.09
+
+1\. Setup the parameters.
+
+```shell-session
+$ EDITOR config.env
+```
+
+`config.env`:
+
+```sh
+IN_ROOT="/path/to/server"
+IN_ORG="Example"
+IN_DOMAIN="example.com"
+IN_USER="user"
+IN_EMAIL="user@exaple.com"
+
+# DNS
+
+IN_DNS_ADDR="192.168.1.25"
+IN_DNS_ADDR_INV="1"
+IN_DNS_REVERSE_ZONE="1.168.192"
+IN_DNS_WHITELIST="192.168.1.0/24"
+IN_DNS_SERIAL="$(date +%Y%m%d)01"
+
+# Reverse proxy
+
+IN_PASSWORD="1234"
+
+# CI
+
+IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
+```
+
+2\. Initialize the Swarm.
+
+```shell-session
+# docker swarm init
+```
+
+3\. (Optional) Download the needed images.
+
+```shell-session
+# docker pull certbot/certbot
+# docker pull drone/agent:0.8.6
+# docker pull drone/cli:0.8.6
+# docker pull drone/drone:0.8.6
+# docker pull filebrowser/filebrowser:v1.10.0
+# docker pull gogs/gogs:0.11.53
+# docker pull ntrrg/bind:private
+# docker pull ntrrg/htpasswd
+# docker pull ntrrg/nginx:rproxy
+# docker pull ntrrg/site
+# docker pull registry:2
+```
+
+4\. Generate the secrets.
+
+```shell-session
+# make secrets
+```
+
+5\. Deploy the services.
+
+```shell-session
+# make
+#
+# # Run services in multiples nodes (see Distributed section)
+# make deploy
+#
+# # Run services in one node
+# make deploy-single
+```
+
 ## Services
 
 * [DNS](#dns) ([Bind9][])
 * [Reverse proxy](#reverse-proxy) ([NGINX][])
-* [Status](#status) ([Visualizer][])
+* [Status](#status) (TODO)
 * [Site](#site) ([NGINX][])
 * [Storage](#storage) ([NGINX][], [File Browser][])
 * [Mirrors](#mirrors) ([NGINX][])
@@ -27,6 +109,7 @@ home       | nt.web.ve
 mirrors    | nt.web.ve
 ns1        | nt.web.ve
 registry   | nt.web.ve
+s6         | nt.web.ve
 status     | nt.web.ve
 storage    | nt.web.ve
 test       | nt.web.ve
@@ -36,7 +119,6 @@ www        | nt.web.ve
 
 * `deb.debian.org` -> `mirrors.nt.web.ve`
 * `dl-cdn.alpinelinux.org` -> `mirrors.nt.web.ve`
-* `httpredir.debian.org` -> `mirrors.nt.web.ve`
 
 ### Reverse proxy
 
@@ -109,35 +191,7 @@ services:
 
 **Constraints:** `node.labels.docker-registry == true`
 
-## Usage
-
-**Requirements:**
-
-* GNU Make
-
-1\. Initialize the Swarm.
-
-```shell-session
-# docker swarm init
-```
-
-2\. Generate the secrets.
-
-```shell-session
-# HTPASSWD="PASSWORD" make secrets
-```
-
-3\. Deploy the services.
-
-```shell-session
-# make
-#
-# # Run services in multiples nodes (see Services section)
-# DRONE_SECRET="SECRET" make deploy
-#
-# # Run services in one node
-# DRONE_SECRET="SECRET" make deploy-single
-```
+## Distributed
 
 ## Acknowledgment
 
