@@ -1,4 +1,4 @@
-**intranet** is a tool that lets you deploy common enterprise services in 4
+**intranet** is a tool that let you deploy common enterprise services in 4
 steps.
 
 ## Usage
@@ -89,7 +89,7 @@ IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
 * [Storage](#storage) ([NGINX][], [File Browser][])
 * [Mirrors](#mirrors) ([NGINX][])
 * [Git](#git) ([Gogs][])
-* [CI](#continuos-integration) ([Drone][])
+* [CI](#continuous-integration) ([Drone][])
 * [Container Registry](#container-registry) ([Docker Registry][])
 
 ### DNS
