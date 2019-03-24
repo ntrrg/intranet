@@ -21,7 +21,10 @@ deploy-single:
 		"$(IN_ROOT)/srv/gogs" \
 		"$(IN_ROOT)/srv/mirrors" \
 		"$(IN_ROOT)/srv/registry" \
-		"$(IN_ROOT)/srv/storage"
+		"$(IN_ROOT)/srv/storage" \
+		"$(IN_ROOT)/srv/storage/data"
+	touch "$(IN_ROOT)/srv/storage/database.db" \
+		&& chown 1000:1000 "$(IN_ROOT)/srv/storage/database.db"
 	docker node update \
 		--label-add ci-builder=true \
 		--label-add ci-server=true \

@@ -53,12 +53,11 @@ IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
 # docker pull drone/agent:0.8.6
 # docker pull drone/cli:0.8.6
 # docker pull drone/drone:0.8.6
-# docker pull filebrowser/filebrowser:v1.10.0
+# docker pull filebrowser/filebrowser:v2.0.3
 # docker pull gogs/gogs:0.11.53
 # docker pull ntrrg/bind:private
 # docker pull ntrrg/htpasswd
 # docker pull ntrrg/nginx:rproxy
-# docker pull ntrrg/site
 # docker pull registry:2
 ```
 

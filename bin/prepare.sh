@@ -32,6 +32,7 @@ replaceVars() {
     setValue "ORG"              "$IN_ORG"              "$FILE"
     setValue "DOMAIN"           "$IN_DOMAIN"           "$FILE"
     setValue "USER"             "$IN_USER"             "$FILE"
+    setValue "PASSWORD"         "$IN_PASSWORD"         "$FILE"
     setValue "DNS_ADDR"         "$IN_DNS_ADDR"         "$FILE"
     setValue "DNS_ADDR_INV"     "$IN_DNS_ADDR_INV"     "$FILE"
     setValue "DNS_REVERSE_ZONE" "$IN_DNS_REVERSE_ZONE" "$FILE"

@@ -11,7 +11,7 @@ main() {
   genCerts test
 
   docker run --rm \
-    ntrrg/htpasswd -bB ntrrg "$IN_PASSWORD" > "$IN_ROOT/etc/htpasswd"
+    ntrrg/htpasswd -bB "$IN_USER" "$IN_PASSWORD" > "$IN_ROOT/etc/htpasswd"
 }
 
 genCerts() {

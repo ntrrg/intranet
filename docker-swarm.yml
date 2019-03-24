@@ -71,15 +71,18 @@ services:
         constraints:
           - node.labels.storage == true
   filebrowser:
-    image: filebrowser/filebrowser:v1.10.0
-    command: -b /admin -d /srv/filebrowser.db -s /srv/data -p 8080
+    image: filebrowser/filebrowser:v2.0.3
+    command: -b /admin -p 8080
     user: "1000:1000"
     networks:
       - web
     volumes:
       - type: bind
-        source: {{ ROOT }}/srv/storage
+        source: {{ ROOT }}/srv/storage/data
         target: /srv
+      - type: bind
+        source: {{ ROOT }}/srv/storage/database.db
+        target: /database.db
     deploy:
       restart_policy:
         condition: on-failure
