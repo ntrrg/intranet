@@ -38,6 +38,7 @@ replaceVars() {
     setValue "DNS_WHITELIST"    "$IN_DNS_WHITELIST"    "$FILE"
     setValue "DNS_SERIAL"       "$IN_DNS_SERIAL"       "$FILE"
     setValue "DRONE_SECRET"     "$IN_DRONE_SECRET"     "$FILE"
+    setValue "SITE_IMAGE"       "$IN_SITE_IMAGE"       "$FILE"
   done
 }
 

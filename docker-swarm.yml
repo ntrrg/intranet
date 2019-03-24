@@ -46,7 +46,7 @@ services:
       restart_policy:
         condition: on-failure
   site:
-    image: ntrrg/site
+    image: {{ SITE_IMAGE }}
     networks:
       - web
     deploy:
