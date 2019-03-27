@@ -1,3 +1,5 @@
+[![Travis build btatus](https://travis-ci.com/ntrrg/intranet.svg?branch=master)](https://travis-ci.com/ntrrg/intranet)
+
 **intranet** is a tool that let you deploy common enterprise services in 4
 steps.
 
@@ -14,33 +16,7 @@ steps.
 $ EDITOR config.env
 ```
 
-`config.env`:
-
-```sh
-IN_ROOT="/path/to/server"
-IN_ORG="Example"
-IN_DOMAIN="example.com"
-IN_USER="user"
-IN_EMAIL="user@exaple.com"
-
-# DNS
-
-IN_DNS_ADDR="192.168.1.25"
-IN_DNS_ADDR_INV="1"
-IN_DNS_REVERSE_ZONE="1.168.192"
-IN_DNS_WHITELIST="192.168.1.0/24"
-IN_DNS_SERIAL="$(date +%Y%m%d)01"
-
-# Reverse proxy
-
-IN_PASSWORD="1234"
-
-# CI
-
-IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
-```
-
-2\. Initialize the Swarm.
+2\. Initialize Swarm.
 
 ```shell-session
 # docker swarm init
@@ -61,13 +37,13 @@ IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
 # docker pull registry:2
 ```
 
-4\. Generate the secrets.
+4\. Generate secrets.
 
 ```shell-session
 # make secrets
 ```
 
-5\. Deploy the services.
+5\. Deploy services.
 
 ```shell-session
 # make
@@ -97,27 +73,27 @@ IN_DRONE_SECRET="aJKSnd-sadasd123h1-123h1h2g"
 
 **Ports:** `53/tcp`, `53/upd`
 
-**Domain** | **IP/Alias**
------------|--------------
-nt.web.ve  | 192.168.0.50
-blog       | nt.web.ve
-ci         | nt.web.ve
-docker     | nt.web.ve
-git        | nt.web.ve
-home       | nt.web.ve
-mirrors    | nt.web.ve
-ns1        | nt.web.ve
-registry   | nt.web.ve
-s6         | nt.web.ve
-status     | nt.web.ve
-storage    | nt.web.ve
-test       | nt.web.ve
-www        | nt.web.ve
+**Domain**  | **IP/Alias**
+------------|--------------
+example.com | 192.168.0.50
+blog        | example.com
+ci          | example.com
+docker      | example.com
+git         | example.com
+home        | example.com
+mirrors     | example.com
+ns1         | example.com
+registry    | example.com
+s6          | example.com
+status      | example.com
+storage     | example.com
+test        | example.com
+www         | example.com
 
 #### Rewrites
 
-* `deb.debian.org` -> `mirrors.nt.web.ve`
-* `dl-cdn.alpinelinux.org` -> `mirrors.nt.web.ve`
+* `deb.debian.org` -> `mirrors.example.com`
+* `dl-cdn.alpinelinux.org` -> `mirrors.example.com`
 
 ### Reverse proxy
 
@@ -125,18 +101,18 @@ www        | nt.web.ve
 
 **Ports:** `80/tcp`, `443/tcp`
 
-**Name**         | **Protocol** | **Target**
------------------|--------------|-------------------------------
-nt.web.ve        | `h2`         | `site:80`
-blog.nt.web.ve   | `h2`         | `site:80`
-ci.nt.web.ve     | `h2`         | `ci-server:8000`
-docker.nt.web.ve | `h2`         | `docker-registry:5000`
-git.nt.web.ve    | `h2`         | `git:3000`
-mirrors.web.ve   | `http`, `h2` | `mirrors:80`
-registry.web.ve  | `h2`         | `registry:5000`
-status.web.ve    | `h2`         | `status:8080`
-storage.web.ve   | `http`, `h2` | `storage:80`, `filebrowser:80`
-www.nt.web.ve    | `h2`         | `site:80`
+**Name**           | **Protocol** | **Target**
+-------------------|--------------|-------------------------------
+example.com        | `h2`         | `site:80`
+blog.example.com   | `h2`         | `site:80`
+ci.example.com     | `h2`         | `ci-server:8000`
+docker.example.com | `h2`         | `docker-registry:5000`
+git.example.com    | `h2`         | `git:3000`
+mirrors.web.ve     | `http`, `h2` | `mirrors:80`
+registry.web.ve    | `h2`         | `registry:5000`
+status.web.ve      | `h2`         | `status:8080`
+storage.web.ve     | `http`, `h2` | `storage:80`, `filebrowser:80`
+www.example.com    | `h2`         | `site:80`
 
 ### Status
 
@@ -165,20 +141,20 @@ The easiest way to manage the Drone service is using the official
 
 ```shell-session
 # docker run \
-  -e DRONE_SERVER=https://ci.nt.web.ve \
+  -e DRONE_SERVER=https://ci.example.com \
   -e DRONE_TOKEN=TOKEN \
   drone/cli:0.8.6 info
 ```
 
 **Note:** `TOKEN` should be obtained from the
-[web interface](https://ci.nt.web.ve/account/token).
+[web interface](https://ci.example.com/account/token).
 
 Also there are some useful endpoints for getting information about the CI
 services:
 
-* <https://ci.nt.web.ve/metrics>
-* <https://ci.nt.web.ve/api/info/queue>
-* <https://ci.nt.web.ve/api/builds>
+* <https://ci.example.com/metrics>
+* <https://ci.example.com/api/info/queue>
+* <https://ci.example.com/api/builds>
 
 ### Container Registry
 
