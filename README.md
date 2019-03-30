@@ -1,7 +1,23 @@
 [![Travis build btatus](https://travis-ci.com/ntrrg/intranet.svg?branch=master)](https://travis-ci.com/ntrrg/intranet)
 
-**intranet** is a tool that let you deploy common enterprise services in 4
-steps.
+**intranet** is a tool that let you deploy common enterprise services in an
+easy way. It includes:
+
+* [DNS](#dns) ([Bind9][])
+* [Reverse proxy](#reverse-proxy) ([NGINX][])
+* [Site](#site) ([NGINX][])
+* [Storage](#storage) ([NGINX][], [File Browser][])
+* [Mirrors](#mirrors) ([NGINX][])
+* [Git](#git) ([Gogs][])
+* [CI](#continuous-integration) ([Drone][])
+* [Container Registry](#container-registry) ([Docker Registry][])
+
+And will include (hopefully) soon:
+
+* Services monitoring
+* Proxy server
+* VPN server
+* CD
 
 ## Usage
 
@@ -33,6 +49,7 @@ $ EDITOR config.env
 # docker pull gogs/gogs:0.11.53
 # docker pull ntrrg/bind:private
 # docker pull ntrrg/htpasswd
+# docker pull ntrrg/nginx:http
 # docker pull ntrrg/nginx:rproxy
 # docker pull registry:2
 ```
@@ -48,7 +65,7 @@ $ EDITOR config.env
 ```shell-session
 # make
 #
-# # Run services in multiples nodes (see Distributed section)
+# # Run services in multiples nodes (see Services section)
 # make deploy
 #
 # # Run services in one node
@@ -56,16 +73,6 @@ $ EDITOR config.env
 ```
 
 ## Services
-
-* [DNS](#dns) ([Bind9][])
-* [Reverse proxy](#reverse-proxy) ([NGINX][])
-* [Status](#status) (TODO)
-* [Site](#site) ([NGINX][])
-* [Storage](#storage) ([NGINX][], [File Browser][])
-* [Mirrors](#mirrors) ([NGINX][])
-* [Git](#git) ([Gogs][])
-* [CI](#continuous-integration) ([Drone][])
-* [Container Registry](#container-registry) ([Docker Registry][])
 
 ### DNS
 
